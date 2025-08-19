@@ -2,7 +2,7 @@ import os
 import pymongo
 from pymongo.errors import PyMongoError
 
-class DataLoader:
+class DbConnection:
     def __init__(self):
         self.collection_name = os.getenv("MONGODB_COLLECTION")
 
