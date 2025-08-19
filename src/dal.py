@@ -7,6 +7,7 @@ class Dal:
 
     def __init__(self):
         self.connection = DbConnection()
+        self.collection = self.connection.db[self.connection.collection_name]
 
     @staticmethod
     def check_soldier(soldier_dict: dict):
@@ -19,30 +20,45 @@ class Dal:
 
     def find_all(self):
         try:
-            collection = self.connection.db[self.connection.collection_name]
-            return list(collection.find({}, {"_id": 0}))
-        except PyMongoError as e:
-            print(f"Error reading data: {e}")
-            return []
+            return list(self.collection.find({}, {"_id": 0}))
+        except PyMongoError:
+            return {"error": "database_error"}
 
     def insert_soldier(self, soldier: dict):
         try:
+            if self.collection.find_one({"soldier_id": soldier.get("soldier_id")}):
+                return {"error": "soldier_exists"}
+
             valid_soldier = Dal.check_soldier(soldier)
             if not valid_soldier:
-                print("Soldier validation failed. Not inserting.")
-                return None
+                return {"error": "validation_failed"}
 
-            collection = self.connection.db[self.connection.collection_name]
-            return collection.insert_one(valid_soldier).inserted_id
-        except PyMongoError as e:
-            print(f"Error inserting data: {e}")
-            return None
+            result = self.collection.insert_one(valid_soldier)
+            return {"inserted": "the soldier was successfully inserted.", "inserted_id": str(result.inserted_id)}
+
+        except PyMongoError:
+            return {"error": "database_error"}
 
     def update_soldier(self, soldier_id, field, value):
         try:
-            collection = self.connection.db[self.connection.collection_name]
-            result = collection.update_one({"soldier_id": soldier_id},{"$set": {field: value}})
-            return result.modified_count > 0
-        except PyMongoError as e:
-            print(f"Error updating soldier: {e}")
-            return False
+            result = self.collection.update_one({"soldier_id": soldier_id},{"$set": {field: value}})
+            if result.matched_count == 0:
+                return {"error": "soldier_not_found"}
+
+            return {"modified_count": result.modified_count}
+
+        except PyMongoError:
+            return {"error": "database_error"}
+
+    def delete_soldier(self, soldier_id):
+        try:
+            result = self.collection.delete_one(({"soldier_id": soldier_id}))
+
+            if result.deleted_count == 0:
+                return {"error": "soldier_not_found"}
+
+            return {"deleted_count": result.deleted_count}
+
+        except PyMongoError:
+            return {"error": "database_error"}
+
