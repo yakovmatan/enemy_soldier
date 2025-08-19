@@ -37,3 +37,12 @@ class Dal:
         except PyMongoError as e:
             print(f"Error inserting data: {e}")
             return None
+
+    def update_soldier(self, soldier_id, field, value):
+        try:
+            collection = self.connection.db[self.connection.collection_name]
+            result = collection.update_one({"soldier_id": soldier_id},{"$set": {field: value}})
+            return result.modified_count > 0
+        except PyMongoError as e:
+            print(f"Error updating soldier: {e}")
+            return False
