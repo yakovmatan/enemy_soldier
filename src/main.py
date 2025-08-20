@@ -34,7 +34,7 @@ def create_soldier(soldier: SoldierData):
     return result
 
 @app.put("/soldiersdb/{soldier_id}/{field}/{value}")
-def update_soldier(soldier_id, field, value):
+def update_soldier(soldier_id: int, field: str, value: str):
     result = dal.update_soldier(soldier_id,field, value)
     if isinstance(result, dict) and "error" in result:
         if result["error"] == "soldier_not_found":
@@ -45,7 +45,7 @@ def update_soldier(soldier_id, field, value):
     return result
 
 @app.delete("/soldiersdb/{soldier_id}")
-def delete_soldier(soldier_id):
+def delete_soldier(soldier_id: int):
     result = dal.delete_soldier(soldier_id)
     if isinstance(result, dict) and "error" in result:
         if result["error"] == "soldier_not_found":
