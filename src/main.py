@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from src.dal import Dal
+from dal import Dal
 
 app = FastAPI()
 dal = Dal()

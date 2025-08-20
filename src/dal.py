@@ -1,6 +1,6 @@
 from pymongo.errors import PyMongoError
-from src.db_connection import DbConnection
-from src.soldier import Soldier
+from db_connection import DbConnection
+from soldier import Soldier
 
 
 class Dal:
