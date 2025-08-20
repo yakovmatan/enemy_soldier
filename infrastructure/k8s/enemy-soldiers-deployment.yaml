@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enemy-soldiers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enemy-soldiers
+  template:
+    metadata:
+      labels:
+        app: enemy-soldiers
+    spec:
+      containers:
+      - name: enemy-soldiers
+        image: yakovthedocker/enemy-soldiers
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MONGODB_HOST
+          value: mongodb
+        - name: MONGODB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-root-username
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-root-password
+        - name: MONGODB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-database
+        - name: MONGODB_AUTH_DB
+          value: "admin"
+        - name: MONGODB_PORT
+          value: "27017"
+        - name: MONGODB_COLLECTION
+          value: "soldier_details"
