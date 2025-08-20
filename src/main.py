@@ -1,8 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from dal import Dal
+from pydantic import BaseModel
 
 app = FastAPI()
 dal = Dal()
+
+
+class SoldierData(BaseModel):
+    soldierID: int
+    firstName: str
+    lastName: str
+    phoneNumber:str
+    rank: str
 
 @app.get("/soldiersdb")
 def get_all_soldiers():
@@ -12,7 +21,7 @@ def get_all_soldiers():
     return result
 
 @app.post("/soldiersdb")
-def create_soldier(soldier: dict):
+def create_soldier(soldier: SoldierData):
     result = dal.insert_soldier(soldier)
     if isinstance(result, dict) and "error" in result:
         if result["error"] == "soldier_exists":

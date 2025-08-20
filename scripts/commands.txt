@@ -1,4 +1,12 @@
+oc apply -f .\infrastructure\k8s\mongodb-deployment.yaml
+oc apply -f .\infrastructure\k8s\mongodb-service.yaml
+oc apply -f .\infrastructure\k8s\mongodb-Secret.yaml
+oc apply -f .\infrastructure\k8s\mongodb-pvc.yaml
+
 docker build -t enemy-soldiers .
 docker login
 docker tag enemy-soldiers yakovthedocker/enemy-soldiers:latest
 docker push yakovthedocker/enemy-soldiers
+
+oc apply -f .\infrastructure\k8s\enemy-soldiers-deployment.yaml
+oc apply -f .\infrastructure\k8s\enemy-soldiers-service.yaml
