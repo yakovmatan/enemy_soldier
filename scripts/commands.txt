@@ -10,3 +10,4 @@ docker push yakovthedocker/enemy-soldiers
 
 oc apply -f .\infrastructure\k8s\enemy-soldiers-deployment.yaml
 oc apply -f .\infrastructure\k8s\enemy-soldiers-service.yaml
+oc expose service/enemy-soldiers
