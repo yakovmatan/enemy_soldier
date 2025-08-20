@@ -10,9 +10,9 @@ class Dal:
         self.collection = self.connection.db[self.connection.collection_name]
 
     @staticmethod
-    def check_soldier(soldier_dict: dict):
+    def check_soldier(soldier):
         try:
-            soldier_obj = Soldier(soldier_dict['soldier_id'],soldier_dict['first_name'],soldier_dict['last_name'],soldier_dict['phone_number'], soldier_dict['rank'])
+            soldier_obj = Soldier(soldier.soldierID,soldier.firstName,soldier.lastName,soldier.phoneNumber, soldier.rank)
             return soldier_obj.__dict__
         except Exception as e:
             print(f"Invalid soldier data: {e}")
@@ -24,9 +24,9 @@ class Dal:
         except PyMongoError:
             return {"error": "database_error"}
 
-    def insert_soldier(self, soldier: dict):
+    def insert_soldier(self, soldier):
         try:
-            if self.collection.find_one({"soldier_id": soldier.get("soldier_id")}):
+            if self.collection.find_one({"soldier_id": soldier.soldierID}):
                 return {"error": "soldier_exists"}
 
             valid_soldier = Dal.check_soldier(soldier)
