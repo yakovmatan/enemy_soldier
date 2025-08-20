@@ -1,0 +1,4 @@
+docker build -t enemy-soldiers .
+docker login
+docker tag enemy-soldiers yakovthedocker/enemy-soldiers:latest
+docker push yakovthedocker/enemy-soldiers
